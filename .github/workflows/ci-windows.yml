@@ -1,0 +1,47 @@
+name: CI-Windows
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-windows:
+    name: Build (Windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install MSYS2 and deps
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            mingw-w64-x86_64-meson
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-gtk3
+            mingw-w64-x86_64-gtk4
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-gobject-introspection
+          msystem: MINGW64
+
+      - name: Configure (meson)
+        shell: msys2 {0}
+        run: meson setup build
+
+      - name: Compile
+        shell: msys2 {0}
+        run: meson compile -C build
+
+      - name: Test
+        shell: msys2 {0}
+        run: meson test -C build -v
