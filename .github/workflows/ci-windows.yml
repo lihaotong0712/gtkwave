@@ -27,10 +27,10 @@ jobs:
           update: true
           install: >-
             git
+            flex
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-meson
             mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-flex
             mingw-w64-x86_64-gperf
             mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-gobject-introspection
